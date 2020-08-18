@@ -7,7 +7,7 @@ class SplitIntoFields(beam.DoFn):
         unique_id, price, availability, condition, currency, saletype, merchant, shipping, asins, brand, categories, keys, manufacturer, manufacturerNumber, name = element.split(
             '|')
         return [{"price": price, "id": unique_id}]  # usage of dictionary
-        # return [price, id] # usage of tuple
+        # return [(price, id)] # usage of tuple
 
 
 def FormatOutput(product):
@@ -55,4 +55,4 @@ with beam.Pipeline(options=PipelineOptions()) as p:
     # Write the above PCollection 3 using Beam Write component to write to disk
     result = pc_3 | 'Write' >> beam.io.WriteToText('/Users/wajidm/Downloads/'
                                                    , file_name_suffix='.csv'
-                                                   , shard_name_template='test-SSSSS-of-NNNNN')
+                                                   , shard_name_template='reformat_test-SSSSS-of-NNNNN')
