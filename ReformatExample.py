@@ -7,7 +7,7 @@ class SplitIntoFields(beam.DoFn):
         unique_id, price, availability, condition, currency, saletype, merchant, shipping, asins, brand, categories, keys, manufacturer, manufacturerNumber, name = element.split(
             '|')
         return [{"price": price, "id": unique_id}]  # usage of dictionary
-        # return [price, id] # usage of tuple
+        # return [(price, id)] # usage of tuple
 
 
 def FormatOutput(product):
