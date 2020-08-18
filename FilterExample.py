@@ -6,7 +6,7 @@ class SplitIntoFields(beam.DoFn):
     def process(self, element):
         unique_id, price, availability, condition, currency, saletype, merchant, shipping, asins, brand, categories, keys, manufacturer, manufacturerNumber, name = element.split(
             '|')
-        return [{"price": price, "id": unique_id}]  # usage of dictionary
+        return [{"price": price, "id": unique_id, "name": name}]  # usage of dictionary
         # return [(price, id)] # usage of tuple
 
 class FilterPrice(beam.DoFn):
@@ -17,30 +17,11 @@ class FilterPrice(beam.DoFn):
 def FormatOutput(product):
     price = product["price"]
     prod_id = product["id"]
-    return "price is {} prod id is {}".format(price, prod_id)
+    prod_name = product["name"]
+    return "{},{},{}".format(prod_name, prod_id ,price)
 
 
 # [output_p_coll] = [input_p_coll] | [ Label] >> [Transform]
-
-
-# Extracting the elements from the p collection is done by  beam SDK
-# You don’t need to manually extract the elements from the input collection; the Beam SDKs handle that for you.
-
-# Transform 0 : Use Pipeline IO Input Operator to read the input rows and form and input starting point PCollection
-
-# Transform 1 : Pipeline the input PCollection in step 1 and do parallel processing with "ParDo" operation to split
-#               each element to split each element of the PCollection and reformat to generate desired fields
-#               and return a list with output elements ( In this case key value pair dictionary ) for output
-#               PCollection.
-
-# Transform 2 : Pipeline the output PCollection in Step 1 as input PCollection in Step 2 and the apply 1 to 1 Map
-#               Beam Transform to convert the input PCollection elements into desired String Format
-#               output PCollection elements
-
-# Transform 3 : Pipeline the output PCollection in Step 2 into Beam Pipeline IO Write Operation to write the
-#               PCollection elements into an output file
-
-#
 
 # Create the Pipeline
 with beam.Pipeline(options=PipelineOptions()) as p:
