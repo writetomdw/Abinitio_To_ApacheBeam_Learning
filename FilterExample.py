@@ -32,15 +32,15 @@ with beam.Pipeline(options=PipelineOptions()) as p:
                                               skip_header_lines=1, strip_trailing_newlines=True)
 
     # Process the above PCollection1 and separate them into reformatted fields and create a new PCollection 2
-    pc_2 = pc_1 | "Split into fields" >> (beam.ParDo(SplitIntoFields()))
+    pc_2 = pc_1 | "Split into each fields" >> (beam.ParDo(SplitIntoFields()))
 
     # Process the above PCollection1 and separate them into reformatted fields and create a new PCollection 2
-    pc_3 = pc_2 | "Filter the price higher than 100" >> (beam.ParDo(FilterPrice()))
+    pc_3 = pc_2 | "Filter all prices higher than 100" >> (beam.ParDo(FilterPrice()))
 
     # Format the data in PCollection 2 with a one to one map to text writable format and create a new PCollection 3
     pc_4 = pc_3 | "Format to String" >> (beam.Map(FormatOutput))
 
     # Write the above PCollection 3 using Beam Write component to write to disk
-    result = pc_4 | 'Write' >> beam.io.WriteToText('/Users/wajidm/Downloads/'
+    result = pc_4 | 'Write to Output file' >> beam.io.WriteToText('/Users/wajidm/Downloads/'
                                                    , file_name_suffix='.csv'
                                                    , shard_name_template='filter_test-SSSSS-of-NNNNN')
