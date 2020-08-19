@@ -38,7 +38,7 @@ with beam.Pipeline(options=PipelineOptions()) as p:
     pc_3 = pc_2 | "Filter the price higher than 100" >> (beam.ParDo(FilterPrice()))
 
     # Format the data in PCollection 2 with a one to one map to text writable format and create a new PCollection 3
-    pc_4 = pc_3 | "PairWithOne" >> (beam.Map(FormatOutput))
+    pc_4 = pc_3 | "Format to String" >> (beam.Map(FormatOutput))
 
     # Write the above PCollection 3 using Beam Write component to write to disk
     result = pc_4 | 'Write' >> beam.io.WriteToText('/Users/wajidm/Downloads/'
