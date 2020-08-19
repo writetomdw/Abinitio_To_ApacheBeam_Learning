@@ -43,16 +43,16 @@ with beam.Pipeline(options=PipelineOptions()) as p:
     # lines = p | 'Create' >> beam.Create(['cat|dog', 'snake cat', 'dog']) # example to create data from in-memory
 
     # Read the input file into the Pipeline skip reading header and and create an output PCollection 1
-    pc_1 = p | 'Read' >> beam.io.ReadFromText('/Users/wajidm/Downloads/product_sold3.csv',
+    pc_1 = p | "Read the input file" >> beam.io.ReadFromText('/Users/wajidm/Downloads/product_sold3.csv',
                                               skip_header_lines=1, strip_trailing_newlines=True)
 
     # Process the above PCollection1 and separate them into reformatted fields and create a new PCollection 2
-    pc_2 = pc_1 | "Split into fields" >> (beam.ParDo(SplitIntoFields()))
+    pc_2 = pc_1 | "Split into each fields" >> (beam.ParDo(SplitIntoFields()))
 
     # Format the data in PCollection 2 with a one to one map to text writable format and create a new PCollection 3
-    pc_3 = pc_2 | "Format to String" >> (beam.Map(FormatOutput))
+    pc_3 = pc_2 | "Drop fields and Format to String" >> (beam.Map(FormatOutput))
 
     # Write the above PCollection 3 using Beam Write component to write to disk
-    result = pc_3 | 'Write' >> beam.io.WriteToText('/Users/wajidm/Downloads/'
+    result = pc_3 | 'Write to output file' >> beam.io.WriteToText('/Users/wajidm/Downloads/'
                                                    , file_name_suffix='.csv'
                                                    , shard_name_template='reformat_test-SSSSS-of-NNNNN')
